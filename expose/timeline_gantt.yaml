@@ -1,0 +1,80 @@
+# Whether or not to show today as a 'milestone' on the gantt chart.
+show-today: false
+# Headers at the top of the gantt chart. Can include `year`, `month`,
+# `week`, or `day`
+#
+# Should you want to customize these, there are the functions
+# `create-header`, `create-custom-year-header`, `create-custom-month-header`,
+# `create-custom-day-header`, and `create-custom-week-header`; whose outputs can
+# be used in the headers array.
+headers:
+  - month
+  - week
+# A start date. Not required.
+start: 2026-05-04
+# An end date. Not required.
+end: 2026-09-07
+# A list of tasks
+tasks:
+  - name: Data Acquisition
+    subtasks:
+      - name: Acquisition of Samples
+        start: 2026-05-04
+        end: 2026-05-11
+
+      - name: Label Method Selection
+        start: 2026-05-11
+        end: 2026-05-21
+
+      - name: Human Labelling & Verification
+        start: 2026-05-21
+        end: 2026-05-31
+
+  - name: Research
+    subtasks:
+      - name: Method Overview & Categories
+        start: 2026-05-31
+        end: 2026-06-14
+
+      - name: Feature Implementation Specifics
+        start: 2026-06-09
+        end: 2026-06-20
+
+  - name: Implementation
+    subtasks:
+      - name: Desgined Features
+        start: 2026-06-14
+        end: 2026-07-12
+
+      - name: AI Training
+        start: 2026-06-14
+        end: 2026-07-30
+
+  - name: Evaluation
+    start: 2026-07-30
+    end: 2026-08-08
+
+  - name: Consolidated Scoring Mechanism
+    start: 2026-08-08
+    end: 2026-08-18
+
+  - name: Writing
+    start: 2026-08-18
+    end: 2026-09-07
+    subtasks:
+      - name: Lectorate and Checking
+        start: 2026-08-31
+        end: 2026-09-07
+
+milestones:
+  - name: Labeled Dataset Ready
+    date: 2026-05-31
+
+  - name: Method Representatives Implemented
+    date: 2026-07-20
+
+  - name: Draft Hand In
+    date: 2026-08-31
+
+  - name: Final Hand In
+    date: 2026-09-07
