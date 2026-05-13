@@ -240,4 +240,4 @@ In both cases, the automatically generated labels are verified against manually 
 
 #pagebreak()
 
-#bibliography("../refs.bib", title: "Bibliography (Preliminary)")
+#bibliography("/refs.bib", title: "Bibliography (Preliminary)")
