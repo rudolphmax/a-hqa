@@ -1,25 +1,14 @@
+#import "../utils/base.typ": base, footer
+
 #import "@preview/gantty:0.5.1": gantt
 #import "@preview/titleize:0.1.1": titlecase
 
-#set page(
-  margin: (top: 2.5cm, left: 3cm),
+#show: base
+
+#set document(
+  title: "Automatic handwriting Quality Analysis",
+  author: "Maximilian Rudolph"
 )
-#set text(12pt, lang: "en", region: "GB")
-#set par(spacing: 1.5em, leading: 1em, justify: true)
-
-#show heading: titlecase
-#show heading.where(level: 1): set block(above: 2em, below: 1.5em)
-#show heading.where(level: 1): set par(leading: 0.65em)
-#show heading.where(level: 2): set par(leading: 0.65em)
-#show heading.where(level: 2): set block(above: 2em, below: 1.5em)
-#show heading.where(level: 3): set block(above: 1em, below: 1.5em)
-
-#set heading(numbering: "1.")
-#show bibliography: set heading(numbering: "1.")
-
-#show link: underline
-
-#set figure(placement: top)
 
 #[
   #set align(center)
@@ -35,7 +24,6 @@
 
   #[
     #set text(21pt)
-
     #titlecase("Classification Accuracy of Approaches to Automatic handwriting quality analysis and how feature interpretability constrains accuracy")
   ]
 
@@ -51,14 +39,9 @@
 #pagebreak()
 
 #set page(
-  footer: context [
-    #set align(right)
-
-    #counter(page).display(
-      "1/1",
-      both: true,
-    )
-  ]
+  footer: footer(numbered: true, [
+    Maximilian Rudolph
+  ])
 )
 
 
