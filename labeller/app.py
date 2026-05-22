@@ -10,7 +10,7 @@ from streamlit.delta_generator import DeltaGenerator
 
 from utils import prepare_label_csv, preprocess_image
 
-cols = ["Num", "Filename", "Reader", "Legibility", "Effort", "Layout", "Letter Formation", "Alteration", "Formation Ziv", "Horizontal Alignment", "Vertical Alignment"]  # noqa: E501
+cols = ["Num", "Filename", "Reader", "Legibility", "Effort", "Layout", "Letter Formation", "Alteration", "Formation Ziv", "Horizontal Alignment", "Vertical Alignment", "Num Lines", "Num Letters"]  # noqa: E501
 
 if not Path("data/validation_set.csv").is_file():
   raise Exception("No validation dataset csv found.")
@@ -45,10 +45,15 @@ if "index" not in st.session_state:
 if "reader" not in st.session_state:
     st.session_state["reader"] = labels.iloc[start_index-1]["Reader"]
 
+if "rotation" not in st.session_state:
+    st.session_state["rotation"] = 0
+
 if "guidelines" not in st.session_state:
     st.session_state["guidelines"] = "None"
 
 def next_doc(values: dict) -> None:
+  st.session_state.rotation = 0
+
   sample = samples.iloc[st.session_state.index]
 
   labels.loc[st.session_state.index] = [
@@ -63,6 +68,8 @@ def next_doc(values: dict) -> None:
     values["formation-ziv"],
     values["hor-alignment"],
     values["vert-alignment"],
+    values["num-lines"],
+    values["num-letters"],
   ]
 
   labels.to_csv("data/validation_labels.csv", index=False)
@@ -90,8 +97,6 @@ def question(container: DeltaGenerator, name: str, desc: str, key: str) -> int:
 
 st.set_page_config(layout="wide")
 
-st.write(st.session_state.guidelines)
-
 if st.session_state.round == 3:
   st.header("You're Done!")
   st.text("That's it! All " + str(num_documents) + " documents are labelled. You can now close this window.")
@@ -103,12 +108,24 @@ else:
   with left_column:
     sample = samples.iloc[st.session_state.index]
 
-    info = st.container(horizontal=True, horizontal_alignment="distribute")
+    info = st.container(horizontal=True, horizontal_alignment="distribute", vertical_alignment="center")
     info.text("Doc: " + str(sample["Num"]))
     info.text(str(st.session_state.index + 1) + "/" + str(num_documents))
 
+    rotate_container = info.container(horizontal=True, width="content")
+
+    def rotate_left() -> None:
+      st.session_state.rotation += 1
+
+    def rotate_right() -> None:
+      st.session_state.rotation -= 1
+
+    rotate_container.button("rotate left", on_click=rotate_left, type="tertiary", icon=":material/rotate_left:")
+    rotate_container.button("rotate right", on_click=rotate_right, type="tertiary", icon=":material/rotate_right:", icon_position="right")  # noqa: E501
+
     img = Image.open(sample["Filename"])
     img = ImageOps.exif_transpose(img)
+    img = img.rotate(st.session_state.rotation, expand=False)
     img, img_vert, img_hor = preprocess_image(img)
 
     if (st.session_state.guidelines == "Horizontal"):
@@ -172,6 +189,8 @@ else:
             "formation-ziv": np.nan,
             "hor-alignment": np.nan,
             "vert-alignment": np.nan,
+            "num-lines": np.nan,
+            "num-letters": np.nan,
           })
 
     elif (st.session_state.round == 1):
@@ -215,9 +234,9 @@ else:
         with r.expander("Edit"):
           st.caption(
             """
-            Enable the horizontal guidelines. Count the spaces between all words in terms of space between the provided
-            guidelines. For example, two words may be separated by 2, 0.5, or 1.5 spaces. Make one entry below for each
-            word-gap.
+            Enable the vertical guidelines. Count the spaces between all words in terms of space between the provided
+            guidelines. For example, two words may be separated by 2, 4, or 8 spaces. Make one entry below for each
+            word-gap. Round down.
             """,
           )
           hor_alignment = st.data_editor(
@@ -236,9 +255,9 @@ else:
         with r.expander("Edit"):
           st.caption(
             """
-            Enable the vertical guidelines. Count the spaces between all lines in terms of space between the provided
-            guidelines. For example, two lines may be separated by 2, 0.5, or 1.5 spaces. Make one entry below for each
-            line-gap.
+            Enable the horizontal guidelines. Count the amount of deviation from a line in terms of space between
+            the provided guidelines. Bottom extenders (e.g. loop of a g) don't count.
+            For example, a line may deviate by 2, 1, or 6 spaces. Make one entry below for each line-gap. Round down.
             """,
           )
           vert_alignment = st.data_editor(
@@ -266,4 +285,6 @@ else:
             "formation-ziv": 1 - (formation_ziv / num_letters),
             "hor-alignment": hor_alignment["Hor Spacing"].std() / hor_alignment["Hor Spacing"].mean(),
             "vert-alignment": vert_alignment["Vert Spacing"].std() / vert_alignment["Vert Spacing"].mean(),
+            "num-lines": len(vert_alignment["Vert Spacing"]),
+            "num-letters": num_letters,
           })

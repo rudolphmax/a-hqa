@@ -29,7 +29,7 @@ def preprocess_image(img: ImageType) -> tuple[ImageType, ImageType, ImageType]:
   image_vert_lines = cv2.cvtColor(np.array(img.copy()), cv2.COLOR_RGB2BGR)
   image_hor_lines = cv2.cvtColor(np.array(img.copy()), cv2.COLOR_RGB2BGR)
 
-  line_offset = (2.5 / 2.54) * dpi[0]
+  line_offset = (0.5 / 2.54) * dpi[0]
 
   line_x = 0
   while line_x < width:
