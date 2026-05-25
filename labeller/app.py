@@ -43,7 +43,10 @@ if "index" not in st.session_state:
     st.session_state["index"] = start_index
 
 if "reader" not in st.session_state:
-    st.session_state["reader"] = labels.iloc[start_index-1]["Reader"]
+  if labels.shape[0] > 0:
+    st.session_state["reader"] = labels.iloc[max(0, start_index-1)]["Reader"]
+  else:
+    st.session_state["reader"] = 1
 
 if "rotation" not in st.session_state:
     st.session_state["rotation"] = 0
@@ -136,7 +139,7 @@ else:
     else:
       st.image(image=cast("Image.Image", img))
 
-    st.session_state.reader = st.text_input("Reader", labels.iloc[start_index-1]["Reader"], width=100)
+    st.session_state.reader = st.text_input("Reader", st.session_state.reader, width=100)
 
   with right_column:
     st.space("medium")
