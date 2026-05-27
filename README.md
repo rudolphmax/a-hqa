@@ -26,7 +26,15 @@ To randomly sample a subset of the general dataset (used here for validation of 
 python data/build_validation_set.py   # run from project root
 ```
 
+### Reproducing Validation
 
+First, the dependencies for all the automatic labellers must be installed:
+
+```bash
+pip install -r automatic-labellers/Handwriting-Quality-Assessor/requirements.txt       # install submodule dependencies
+```
+
+Then the process from `validation.ipynb` can be followed.
 
 [^1]: J. Ziviani and J. Elkins, “An Evaluation of Handwriting Performance,” Educational Review, vol. 36, no. 3, pp. 249–261, Nov. 1984, doi: 10.1080/0013191840360304.
 [^2]: A. L. Barnett, M. Prunty, and S. Rosenblum, “Development of the Handwriting Legibility Scale (HLS): A preliminary examination of Reliability and Validity,” Research in Developmental Disabilities, vol. 72, pp. 240–247, Jan. 2018, doi: 10.1016/j.ridd.2017.11.013.

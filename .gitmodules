@@ -1,0 +1,3 @@
+[submodule "automatic-labellers/Handwriting-Quality-Assessor"]
+	path = automatic-labellers/Handwriting-Quality-Assessor
+	url = git@github.com:S5-Team-Workspace/Handwriting-Quality-Assessor.git
